@@ -5,11 +5,16 @@ import { NavLink } from "react-router-dom";
 
 
 
-
+const logout=()=> {
+  sessionStorage.clear();
+  window.location.href = '/';
+}
 
 const Navbar = () => {
   const token = JSON.parse(sessionStorage.getItem('token'));
   const userName = token.name;
+
+
 
  
   
@@ -20,6 +25,8 @@ const Navbar = () => {
           Homes4All
         </NavLink>
         Welcome,{userName}
+
+        <a href="#" onClick={logout}>Logout</a>
        
  
         <div className="collapse navbar-collapse" id="navbarSupportedContent">

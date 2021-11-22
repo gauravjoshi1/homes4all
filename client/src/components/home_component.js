@@ -1,106 +1,95 @@
-import React, { Component } from "react";
-// This will require to npm install axios
-import axios from 'axios';
-import { Link } from "react-router-dom";
-import './home_component.css'
+
+import React, { useRef, useState } from 'react';
+
+import Script from 'react-load-script';
+import SearchBar from 'material-ui-search-bar';
 
 
-const Record = (props) => (
-  <tr>
-    <td>{props.record.person_name}</td>
-    <td>{props.record.person_position}</td>
-    <td>{props.record.person_level}</td>
-    <td>
-      <Link to={"/edit/" + props.record._id}>Edit</Link> |
-      <a
-        href="/"
-        onClick={() => {
-          props.deleteRecord(props.record._id);
-        }}
-      >
-        Delete
-      </a>
-    </td>
-  </tr>
-);
 
-export default class HomeComponent extends Component {
-  // This is the constructor that shall store our data retrieved from the database
-  constructor(props) {
-    super(props);
-    this.deleteRecord = this.deleteRecord.bind(this);
-    this.state = { records: [] };
-  }
 
-  // This method will get the data from the database.
-  componentDidMount() {
-    axios
-      .get("http://localhost:5000/record/")
-      .then((response) => {
-        this.setState({ records: response.data });
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  }
+const HomeComponent = () => {
+  const [query, setQuery] = useState('');
+  const [city, setCity] = useState('');
 
-  // This method will delete a record based on the method
-  deleteRecord(id) {
-    axios.delete("http://localhost:5000/" + id).then((response) => {
-      console.log(response.data);
-    });
-
-    this.setState({
-      record: this.state.records.filter((el) => el._id !== id),
-    });
-  }
-
-  // This method will map out the users on the table
-  recordList() {
-    return this.state.records.map((currentrecord) => {
-      return (
-        <Record
-          record={currentrecord}
-          deleteRecord={this.deleteRecord}
-          key={currentrecord._id}
-        />
-      );
-    });
-  }
-
-  // This following section will display the table with the records of individuals.
-  render() {
-    return (
-      <div>
-    
-        <div className="row">
-        <div className="container-fluid" >
-
-        <h1 className="text-center">Let's Find your dream home!</h1>
-       
-        <form>
-        <div className="input-group  w-25 offset-4">
-    <input className="form-control" placeholder="Enter any location"/>
-    <span className="input-group-btn ">
-        <button className=" btn btn-info">Go!</button>
-    </span>
-</div>
-   
-     </form>
-           </div> </div>
+ function searchsend(city, query)
+{  const searchParam = {city:city, query:query};
+  const res = 
+   fetch('http://localhost:5000/search', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify(searchParam)
+    })
+      .then(data => data.json())
       
-        <table className="table table-striped" id="about" style={{ marginTop: 20 }}>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Position</th>
-              <th>Level</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>{this.recordList()}</tbody>
-        </table>
-      </div>
-    );
-  }
+      return res;
 }
+
+  // Store autocomplete object in a ref.
+  // This is done because refs do not trigger a re-render when changed.
+  const autocompleteRef = useRef(null);
+
+  const handleScriptLoad = () => {
+    // Declare Options For Autocomplete
+    const options = {
+      types: ['(cities)'],
+    };
+
+    // Initialize Google Autocomplete
+    /*global google*/ // To disable any eslint 'google not defined' errors
+    autocompleteRef.current = new google.maps.places.Autocomplete(
+      document.getElementById("autocomplete"),
+      options
+    );
+
+    // Avoid paying for data that you don't need by restricting the set of
+    // place fields that are returned to just the address components and formatted
+    // address.
+    autocompleteRef.current.setFields(['address_components', 'formatted_address']);
+
+    // Fire Event when a suggested name is selected
+    autocompleteRef.current.addListener('place_changed', handlePlaceSelect);
+  };
+
+  const handlePlaceSelect = () => {
+    // Extract City From Address Object
+    console.log(autocompleteRef);
+    const addressObject = autocompleteRef.current.getPlace();
+    const address = addressObject.address_components;
+  
+
+    // Check if address is valid
+    if (address.length>0) {
+      setCity(address[0].long_name);
+      setQuery(addressObject.formatted_address);
+   
+     const val = searchsend(address[0].long_name, addressObject.formatted_address)
+   
+    }
+    
+    
+  };
+
+  return (
+    <div>
+      <Script
+        url="https://maps.googleapis.com/maps/api/js?key=AIzaSyDDVzrusSOTLiMsSL3phSsJGw7QjZphoUE&libraries=places"
+        onLoad={handleScriptLoad}
+      />
+      <SearchBar
+        id="autocomplete"
+        placeholder=""
+        value={query}
+        
+        style={{
+          margin: '0 auto',
+          maxWidth: 800,
+        }}
+      />
+    </div>
+  );
+};
+
+export default HomeComponent;

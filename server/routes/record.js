@@ -78,7 +78,7 @@ app.route("/:id").delete((req, response) => {
 
 app.route("/login").post(async function (req, res) {
   try{
-    let db_connect = dbo.getDb("homes4all");
+    let db_connect = dbo.getDb();
     var User = db_connect.collection("Users")
     const { loginusername, loginpassword} = req.body;  
     const user = await User.findOne({
@@ -105,13 +105,13 @@ app.route("/login").post(async function (req, res) {
       
      }
      else
-     res.status(403).send("Invalid credentials");
+     res.status(403).json({error:"Invalid credentials"});
      
   
   
   }
   else{
-    res.status(403).send("Invalid credentials");
+    res.status(403).json({error:"Invalid credentials"});
   }
     
   
@@ -127,17 +127,17 @@ app.route("/login").post(async function (req, res) {
 
 app.route("/register").post( async function (req, res) {
  try{
-  let db_connect = dbo.getDb("homes4all");
+  let db_connect = dbo.getDb();
   var User = db_connect.collection("Users")
   const { registername, registeremail, registerpassword } = req.body;
   if (!(registeremail && registerpassword && registername )) {
-    res.status(400).send("All input is required");
+    res.status(400).json({error:"All input is required"});
 
   }
   const oldUser =  await User.findOne({email: registeremail });
 
   if (oldUser) {
-    return res.status(409).send("User Already Exists. Please Login");
+    return res.status(409).json({error:"User Already Exists. Please Login"});
   }
 
   encryptedPassword = await bcrypt.hash(registerpassword, 10);
@@ -172,7 +172,7 @@ app.route("/register").post( async function (req, res) {
   }
   else
   {
-    res.status(400).send("Unable to add user")
+    res.status(400).json({errror:"Unable to add user"})
 
   }
   
@@ -186,5 +186,17 @@ app.route("/register").post( async function (req, res) {
 
 
 });
+
+app.route("/search").post((req, response) => {
+	
+  console.log(req.body.city);
+
+
+
+	});
+  
+
+
+
 
 module.exports = app;
