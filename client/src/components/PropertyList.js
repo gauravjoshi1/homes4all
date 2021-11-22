@@ -1,7 +1,26 @@
 /* eslint-disable jsx-a11y/img-redundant-alt */
 import React from "react";
+import { useState, useNavigate } from "react-router-dom";
 
-const Property = (props) => {
+const PropertyList = (props) => {
+  const navigate = useNavigate();
+
+  const handleClick = () =>
+    navigate("/property", {
+      state: {
+        propertyName: props.propertyName,
+        imageName: props.imageName,
+        description: props.description,
+        type: props.type,
+        bedrooms: props.bedrooms,
+        bathrooms: props.bathrooms,
+        yearBuilt: props.yearBuilt,
+        pricePerSqft: props.pricePerSqft,
+        area: props.area,
+        location: props.location,
+      },
+    });
+
   return (
     <div class="card col-sm card-styling style-photos m-2 p-1">
       <img
@@ -21,7 +40,7 @@ const Property = (props) => {
             role="group"
             aria-label="view and search buttons"
           >
-            <button type="button" class="btn btn-info">
+            <button type="button" class="btn btn-info" onClick={handleClick}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="16"
@@ -64,4 +83,4 @@ const Property = (props) => {
   );
 };
 
-export default Property;
+export default PropertyList;

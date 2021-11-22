@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import React, { useState } from "react";
 
 import Navbar from "./components/navbar";
@@ -7,6 +7,7 @@ import Create from "./components/create";
 import HomeComponent from "./components/home_component";
 import Login from "./components/login";
 import useToken from "./useToken";
+import NewProperty from "./components/NewProperty";
 
 const App = () => {
   const { token, setToken } = useToken();
@@ -18,10 +19,10 @@ const App = () => {
     <div>
       <Navbar />
       <Routes>
-        <Route exact path="/" element={<HomeComponent />}></Route>
-        <Route path="/edit/:id" component={Edit} />
-        <Route path="/create" element={<Create />}></Route>
-        <Route path="/property" element='/'></Route>
+        <Route exact path="/" element={<HomeComponent />} />
+        {/* <Route path="/edit/:id" component={Edit} /> */}
+        <Route path="/create" element={<Create />} />
+        <Route path="/property" element={<NewProperty />} />
       </Routes>
     </div>
   );
