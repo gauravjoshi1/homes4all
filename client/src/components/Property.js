@@ -1,0 +1,67 @@
+/* eslint-disable jsx-a11y/img-redundant-alt */
+import React from "react";
+
+const Property = (props) => {
+  return (
+    <div class="card col-sm card-styling style-photos m-2 p-1">
+      <img
+        class="card-img-top p-3"
+        src={props.imageName}
+        alt="An image of a building in Seattle"
+      />
+      <div class="card-body">
+        <p class="card-text text-center">{props.propertyName}</p>
+        <div
+          class="btn-toolbar"
+          role="toolbar"
+          aria-label="Toolbar with button groups"
+        >
+          <div
+            class="btn-group me-2 mx-3"
+            role="group"
+            aria-label="view and search buttons"
+          >
+            <button type="button" class="btn btn-info">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                class="bi bi-eye-fill"
+                viewBox="0 0 16 16"
+              >
+                <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"></path>
+                <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"></path>
+              </svg>
+              View
+            </button>
+          </div>
+          <div
+            class="btn-group me-2"
+            role="group"
+            aria-label="view and search buttons"
+          >
+            <button type="button" class="btn btn-danger">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                class="bi bi-heart-fill"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"
+                ></path>
+              </svg>
+              Favorite
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Property;

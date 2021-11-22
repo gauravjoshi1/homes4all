@@ -1,8 +1,25 @@
+.container-fluid {
+  background-image: url("./images/main-page2.png");
+  background-size: 100% auto;
+  height: 700px;
+  background-repeat: round;
+}
 
+@media only screen and (max-width: 640px) {
+  .card-styling {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    margin-left: 3rem;
+    margin-right: 3rem;
+  }
 
-.container-fluid{
-    background-image: url('./images/main-page2.png');
-    background-size: 100% auto;
-    height:700px;
+  h1,
+  h2,
+  h3 {
+    text-align: center;
+  }
+}
 
+.style-photos {
+  width: 18rem;
 }

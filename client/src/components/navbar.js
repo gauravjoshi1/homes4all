@@ -10,6 +10,7 @@ const logout=()=> {
   window.location.href = '/';
 }
 
+
 const Navbar = () => {
   const token = JSON.parse(sessionStorage.getItem('token'));
   const userName = token.name;

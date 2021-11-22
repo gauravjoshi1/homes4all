@@ -1,53 +1,33 @@
-import React, { useState }  from 'react';
-import './login.css';
-import PropTypes from 'prop-types';
-import Snackbar from "@material-ui/core/Snackbar";
-import IconButton from "@material-ui/core/IconButton";
-
-
-
+import React, { useState } from "react";
+import "./login.css";
+import PropTypes from "prop-types";
 
 async function loginUser(credentials) {
-   
-  const res = 
-   fetch('http://localhost:5000/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      },
-      body: JSON.stringify(credentials)
-    })
-      .then(data => data.json())
-      
-      return res;
+  return fetch("http://localhost:5000/login", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(credentials),
+  }).then((data) => data.json());
+}
 
-  }
-  
- 
-
-   async function register(registername, registeremail, registerpassword)
-   {
-        
-       return fetch('http://localhost:5000/register', {
-           method: 'POST',
-           headers: {
-             'Content-Type': 'application/json'
-           },
-           body: JSON.stringify({
-               registername, registeremail, registerpassword
-           })
-         })
-           .then( 
-             data => data.json()) 
-   } 
-
-
- 
-
+async function register(registername, registeremail, registerpassword) {
+  return fetch("http://localhost:5000/register", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      registername,
+      registeremail,
+      registerpassword,
+    }),
+  }).then((data) => data.json());
+}
 
 export default function Login({ setToken }) {
-    const [loginusername, setLoginUserName] = useState();
+  const [loginusername, setLoginUserName] = useState();
   const [loginpassword, setLoginPassword] = useState();
   const [open, setOpen] =useState();
 
@@ -56,113 +36,78 @@ export default function Login({ setToken }) {
   const [registerpassword, setRegisterPassword] = useState();
   const [er,setEr] = useState();
 
-  const handleToClose = (event, reason) => {
-    if ("clickaway" == reason) return;
-    setOpen(false);
+  const handleRegisterSubmit = async (e) => {
+    e.preventDefault();
+    const token = await register(registername, registeremail, registerpassword);
+    setToken(token);
   };
 
-const handleRegisterSubmit = async e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const result = await register( registername, registeremail, registerpassword);
-    if(!result.error)
-    setToken(result);
-    else
-    { setEr(result.error);
-      console.log(er);
-      setOpen(true);}
-  }
-
-
-
-  
- 
-
-  const handleSubmit = async e => {
-    e.preventDefault();
-    const result = await loginUser({
-        loginusername,
-        loginpassword
+    const token = await loginUser({
+      loginusername,
+      loginpassword,
     });
-    if(!result.error)
-      setToken(result);
-else{setEr(result.error);
-  
-setOpen(true);
-}
+    console.log(token);
 
-  }
-    return(
-      <div>  
-        <Snackbar
-        anchorOrigin={{
-          horizontal: "left",
-          vertical: "bottom",
-        }}
-        open={open}
-        autoHideDuration={5000}
-        message={er}
-        onClose={handleToClose}
-        action={
-          <React.Fragment>
-            <IconButton
-              size="small"
-              aria-label="close"
-              color="inherit"
-              onClick={handleToClose}
-            >
-              X
-            </IconButton>
-          </React.Fragment>
-        }
-      />
-       
-    
-
-    <div className="login-wrapper">
-      <h1>Please Log In</h1>
-      <form onSubmit={handleSubmit}>
-        <label>
-          <p>Username</p>
-          <input type="text" onChange={e => setLoginUserName(e.target.value)} />
-        </label>
-        <label>
-          <p>Password</p>
-          <input type="password" onChange={e => setLoginPassword(e.target.value)} />
-        </label>
-        <div>
-          <button type="submit">Submit</button>
-        </div>
-      </form>   
-    </div>
-
-    <div className="register-wrapper">
-    <h1>Register</h1>
-    <form onSubmit={handleRegisterSubmit}>
-        <label>
-          <p>Name</p>
-          <input type="text" onChange={e => setRegisterName(e.target.value)} />
-        </label>
-        <label>
-          <p>Email</p>
-          <input type="email" onChange={e => setRegisterEmail(e.target.value)} />
-        </label>
-        <label>
-          <p>Password</p>
-          <input type="password" onChange={e => setRegisterPassword(e.target.value)} />
-        </label>
-        <button type="submit">Submit</button>
+    setToken(token);
+  };
+  return (
+    <div>
+      <div className="login-wrapper">
+        <h1>Please Log In</h1>
+        <form onSubmit={handleSubmit}>
+          <label>
+            <p>Username</p>
+            <input
+              type="text"
+              onChange={(e) => setLoginUserName(e.target.value)}
+            />
+          </label>
+          <label>
+            <p>Password</p>
+            <input
+              type="password"
+              onChange={(e) => setLoginPassword(e.target.value)}
+            />
+          </label>
+          <div>
+            <button type="submit">Submit</button>
+          </div>
         </form>
+      </div>
+
+      <div className="register-wrapper">
+        <h1>Register</h1>
+        <form onSubmit={handleRegisterSubmit}>
+          <label>
+            <p>Name</p>
+            <input
+              type="text"
+              onChange={(e) => setRegisterName(e.target.value)}
+            />
+          </label>
+          <label>
+            <p>Email</p>
+            <input
+              type="text"
+              onChange={(e) => setRegisterEmail(e.target.value)}
+            />
+          </label>
+          <label>
+            <p>Password</p>
+            <input
+              type="password"
+              onChange={(e) => setRegisterPassword(e.target.value)}
+            />
+          </label>
+          <button type="submit">Submit</button>
+        </form>
+      </div>
     </div>
-
-
-
-    </div>
-     
-
-
-  )
+  );
 }
 
 Login.propTypes = {
-    setToken: PropTypes.func.isRequired
-  }
+  setToken: PropTypes.func.isRequired,
+};
