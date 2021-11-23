@@ -76,6 +76,46 @@ app.route("/:id").delete((req, response) => {
 });
 
 
+
+
+app.route("/getTypes").get(function (req, res) {
+  let db_connect = dbo.getDb("homes4all");
+  db_connect
+    .collection("PropertyTypes")
+    .find({})
+    .toArray(function (err, result) {
+      if (err) throw err;
+      res.json(result);
+    });
+});
+
+
+app.route("/addProperty").post(async function (req, res) {
+  let db_connect = dbo.getDb();
+  var Property = db_connect.collection("Property")  
+
+    const createdProperty = await Property.insertOne({
+      bathrooms:req.body.bathrooms, 
+      bedrooms: req.body.bedrooms, 
+      area: req.body.area,pricePerSqft:req.body.pricePerSqft,
+      description:req.body.description,
+      location:req.body.location
+      
+    });
+if(createdProperty){
+res.status(201).json(createdProperty);
+
+}
+else
+{
+  res.status(400).json({errror:"Unable to add user"})
+
+}
+
+
+});
+
+
 app.route("/login").post(async function (req, res) {
   try{
     let db_connect = dbo.getDb();
@@ -147,6 +187,7 @@ app.route("/register").post( async function (req, res) {
     name:registername, 
     email: registeremail.toLowerCase(), // sanitize: convert email to lowercase
     password: encryptedPassword,
+    role:'User'
   });
   if(createduser)
   {

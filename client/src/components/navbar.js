@@ -13,6 +13,7 @@ const logout=()=> {
 const Navbar = () => {
   const token = JSON.parse(sessionStorage.getItem('token'));
   const userName = token.name;
+  const role = token.role;
 
 
 
@@ -26,7 +27,8 @@ const Navbar = () => {
         </NavLink>
         Welcome,{userName}
 
-        <a href="#" onClick={logout}>Logout</a>
+       
+       
        
  
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
@@ -36,6 +38,20 @@ const Navbar = () => {
                 Create Record
               </NavLink>
             </li>
+            { role=='Admin'&&<li className="nav-item">
+              <NavLink className="nav-link" to="/addProp">
+                Add a new property
+              </NavLink>
+              </li> }
+              { role=='User'&&<li className="nav-item">
+              <NavLink className="nav-link" to="/addProp">
+                Cart
+              </NavLink>
+              </li> }
+
+              <li className="nav-item">
+              <a className="nav-link" href="#" onClick={logout}>Logout</a>
+                </li>
           </ul>
         </div>
       </nav>

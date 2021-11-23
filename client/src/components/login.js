@@ -3,6 +3,7 @@ import './login.css';
 import PropTypes from 'prop-types';
 import Snackbar from "@material-ui/core/Snackbar";
 import IconButton from "@material-ui/core/IconButton";
+import FormErrors from "./formErrors"
 
 
 
@@ -55,7 +56,7 @@ export default function Login({ setToken }) {
   const [registeremail, setRegisterEmail] = useState();
   const [registerpassword, setRegisterPassword] = useState();
   const [er,setEr] = useState();
-
+  const[formEr={Password:""}, setFormEr]= useState();
   const handleToClose = (event, reason) => {
     if ("clickaway" == reason) return;
     setOpen(false);
@@ -72,7 +73,21 @@ const handleRegisterSubmit = async e => {
       setOpen(true);}
   }
 
+const  handleLoginPassword = async e=>{
+  let password=e.target.value;
+  setRegisterPassword(password);
+ let formErrors={Password:""};
 
+ if(e.target.value.length<=6)
+ formErrors.Password+="Password length must be greater than 6.";
+ if(!(/\d/.test(password)))
+  formErrors.Password+=" Password should have atleast a digit ";
+
+  
+  setFormEr(formErrors);
+
+
+  }
 
   
  
@@ -122,7 +137,7 @@ setOpen(true);
       <h1>Please Log In</h1>
       <form onSubmit={handleSubmit}>
         <label>
-          <p>Username</p>
+          <p>Username(email)</p>
           <input type="text" onChange={e => setLoginUserName(e.target.value)} />
         </label>
         <label>
@@ -148,10 +163,14 @@ setOpen(true);
         </label>
         <label>
           <p>Password</p>
-          <input type="password" onChange={e => setRegisterPassword(e.target.value)} />
+          <input type="password" onChange={handleLoginPassword} />
         </label>
-        <button type="submit">Submit</button>
+        <div className="panel panel-default">
+ <FormErrors formErrors={formEr} />
+</div> 
+        <button type="submit" disabled={formEr.Password.length>0?true:false}>Submit</button>
         </form>
+     
     </div>
 
 
