@@ -27,7 +27,7 @@ const NewProperty = () => {
           <li>Located in {propertyItem.location}</li>
 
       </ul>
-propertyItem
+
     </>
   );
 };
