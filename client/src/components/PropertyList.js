@@ -11,7 +11,7 @@ const PropertyList = ({ property, loading }) => {
   const handleClick = (propertyItem) =>
     navigate("/property", {
       state: {
-        propertyItem: propertyItem
+        propertyItem: propertyItem,
       },
     });
 
@@ -19,22 +19,30 @@ const PropertyList = ({ property, loading }) => {
     return <h2>Loading .... </h2>;
   }
 
-  
   return (
     <>
       {propertyArr.map((propertyItem) => {
         console.log("A property item " + JSON.stringify(propertyItem));
-        console.log("A property item " + JSON.stringify(propertyItem.description));
-        
+        console.log(
+          "A property item " + JSON.stringify(propertyItem.description)
+        );
+        const imageSource =
+          "../../../server/images/" + JSON.stringify(propertyItem.image).slice(1, -1);
+        console.log(JSON.stringify(imageSource));
         return (
-          <div key={JSON.stringify(propertyItem.id)} className="card col-md-2 card-styling style-photos m-2 mx-4 p-1">
+          <div
+            key={JSON.stringify(propertyItem.id)}
+            className="card col-md-2 card-styling style-photos m-2 mx-4 p-1"
+          >
             <img
               className="card-img-top p-3"
               src= {"/"+propertyItem.image}
               alt="An image of a building in Seattle"
             />
             <div className="card-body">
-              <p className="card-text text-center">{JSON.stringify(propertyItem.description).slice(1, -1)}</p>
+              <p className="card-text text-center">
+                {JSON.stringify(propertyItem.location).slice(1, -1)}
+              </p>
               <div
                 className="btn-toolbar"
                 role="toolbar"
