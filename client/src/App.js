@@ -8,6 +8,8 @@ import HomeComponent from "./components/home_component";
 import Login from "./components/login";
 import useToken from "./useToken";
 import NewProperty from "./components/NewProperty";
+import AddPropertyComponent from "./components/addproperty_component";
+
 
 const App = () => {
   const { token, setToken } = useToken();
@@ -23,6 +25,15 @@ const App = () => {
         {/* <Route path="/edit/:id" component={Edit} /> */}
         <Route path="/create" element={<Create />} />
         <Route path="/property" element={<NewProperty />} />
+        <Route exact path="/" element={<HomeComponent />}>
+
+        </Route>
+ 
+        <Route path="/edit/:id" component={Edit} />
+        <Route path="/create" element={<Create />}/>
+        <Route path="/addProp" element={<AddPropertyComponent/>}/>
+
+        
       </Routes>
     </div>
   );
