@@ -177,7 +177,15 @@ const listOfProperties = [
   },
 ];
 
+
+
+
+
 const HomeComponent = () => {
+
+
+  
+
   const [query, setQuery] = useState("");
   const [city, setCity] = useState("");
 
