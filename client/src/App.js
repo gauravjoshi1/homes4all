@@ -11,7 +11,7 @@ import NewProperty from "./components/NewProperty";
 
 const App = () => {
   const { token, setToken } = useToken();
-
+  
   if (!token) {
     return <Login setToken={setToken} />;
   }

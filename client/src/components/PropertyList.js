@@ -1,28 +1,26 @@
 /* eslint-disable jsx-a11y/img-redundant-alt */
 import React from "react";
-import { useState, useNavigate } from "react-router-dom";
+import {useState, useNavigate} from 'react-router-dom'
 
 const PropertyList = (props) => {
   const navigate = useNavigate();
-
-  const handleClick = () =>
-    navigate("/property", {
-      state: {
-        propertyName: props.propertyName,
-        imageName: props.imageName,
-        description: props.description,
-        type: props.type,
-        bedrooms: props.bedrooms,
-        bathrooms: props.bathrooms,
-        yearBuilt: props.yearBuilt,
-        pricePerSqft: props.pricePerSqft,
-        area: props.area,
-        location: props.location,
-      },
-    });
-
+  
+  const handleClick = () => navigate('/property', {state: {
+    propertyName: props.propertyName,
+    imageName: props.imageName,
+                  description:props.description,
+              type:props.type,
+              bedrooms:props.bedrooms,
+              bathrooms:props.bathrooms,
+              yearBuilt:props.yearBuilt,
+              pricePerSqft:props.pricePerSqft,
+              area:props.area,
+              location:props.location
+    
+  }});
+  
   return (
-    <div class="card col-sm card-styling style-photos m-2 p-1">
+    <div class="card col-md-2 card-styling style-photos m-2 mx-4 p-1">
       <img
         class="card-img-top p-3"
         src={props.imageName}
