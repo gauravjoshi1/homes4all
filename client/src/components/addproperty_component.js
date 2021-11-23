@@ -1,4 +1,3 @@
-
 import React,{Component, useRef, useState } from 'react';
 import axios from 'axios';
 
@@ -130,13 +129,7 @@ render(){
                 name="photo"
                 onChange={this.handlePhoto}
             />
-
-
-
-
-       
-
-     
+                
         <div>
           <button type="submit">Submit</button>
         </div>
@@ -147,4 +140,3 @@ render(){
   );
 };
 }
-

@@ -96,7 +96,7 @@ let imgname="";
 
 const storage = multer.diskStorage({
   destination: function(req, file, cb) {
-      cb(null, 'images');
+      cb(null, '../client/public');
   },
   filename: function(req, file, cb) {    
     dt= Date.now();
@@ -133,7 +133,8 @@ app.route("/addProperty").post(upload.single('photo'), async(req, res) => {
       area: req.body.area,pricePerSqft:req.body.pricePerSqft,
       description:req.body.description,
       location:req.body.location,
-      image:dt + path.extname(imgname)
+      image:dt + path.extname(imgname),
+      active:true
       
     });
 if(createdProperty){
@@ -142,14 +143,43 @@ res.status(201).json(createdProperty);
 }
 else
 {
-  res.status(400).json({errror:"Unable to add user"})
+  res.status(400).json({errror:"Unable to add property"})
 
 }
+
+});
+
+
+app.route("/editProperty").post(upload.single('photo'), async(req, response) => {
+  
+
+  let db_connect = dbo.getDb("homes4all");
+  let myquery = { _id: ObjectId( req.body._id )};
+  let newvalues = {
+    $set: {
+      bathrooms: req.body.bathrooms,
+      bedrooms: req.body.bedrooms,
+      location: req.body.location,
+      pricePerSqft:req.body.pricePerSqft,
+      description:req.body.description,
+      area:req.body.area,
+      image:dt + path.extname(imgname),
+      active : true
+
+    },
+  };
+  console.log(ObjectId(req.body._id));
+  db_connect
+    .collection("Property")
+    .updateOne(myquery, newvalues, function (err, res) {
+      if (err) throw err;
+      console.log("1 document updated");
+      response.json(res);
+    });
 
 
 
 });
-
 
 app.route("/login").post(async function (req, res) {
   try{
@@ -276,11 +306,31 @@ app.route("/search").post((req, response) => {
     let db_connect = dbo.getDb("homes4all");
     db_connect
       .collection("Property")
-      .find({})
+      .find({active:true})
       .toArray(function (err, result) {
         if (err) throw err;
         res.json(result);
       });
+  });
+
+  app.route("/softDelete").post(async function (req, res) {
+    let db_connect = dbo.getDb("homes4all");
+    console.log("ID: "+req.body._id)
+    const filter = { _id: ObjectId(req.body._id) };
+    const updateDoc = {
+      $set: {
+        active: false
+      },
+    };
+    const property= db_connect.collection("Property");
+    const result = await property.updateOne(filter, updateDoc);
+    res.json(result);
+     
+
+
+
+
+
   });
 
   

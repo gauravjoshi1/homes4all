@@ -2,6 +2,8 @@
 import React from "react";
 import { useState, useNavigate } from "react-router-dom";
 
+
+
 const PropertyList = ({ property, loading }) => {
   const propertyArr = Array.from(property);
   const navigate = useNavigate();
@@ -28,7 +30,7 @@ const PropertyList = ({ property, loading }) => {
           <div key={JSON.stringify(propertyItem.id)} className="card col-md-2 card-styling style-photos m-2 mx-4 p-1">
             <img
               className="card-img-top p-3"
-              src={propertyItem.imageName}
+              src= {"/"+propertyItem.image}
               alt="An image of a building in Seattle"
             />
             <div className="card-body">
