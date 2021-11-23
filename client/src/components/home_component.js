@@ -184,28 +184,32 @@ const HomeComponent = () => {
   const [property, setProperty] = useState([]);
   const [loading, setloading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [propertiesPerPage, setPropertiesPerPage] = useState(8);
+  const [propertiesPerPage] = useState(1);
 
-  // useEffect(() => {
-  //   const fetchProperty = async () => {
-  //     setloading(true);
-  //     const res = await axios.get('/api/endpoint');
-  //     setProperty(res.data)
-  //     setloading(false);
-  //   };
+  useEffect(() => {
+    const fetchProperty = async () => {
+      setloading(true);
+      const res = await axios.get('http://localhost:5000/properties');
+      setProperty(res.data)
+      setloading(false);
+    };
 
-  //   fetchProperty();
-  // }, []);
+    fetchProperty();
+  }, []);
 
   console.log("property " + property);
 
   const indexOfLatestProperty = currentPage * propertiesPerPage;
   const indexOfFirstProperty = indexOfLatestProperty - propertiesPerPage;
-  const currentProperty = listOfProperties.slice(
+  const currentProperty = Array.from(property).slice(
     indexOfFirstProperty,
     indexOfLatestProperty
   );
 
+  //change page
+  const paginate = (pageNumber) => setCurrentPage(pageNumber)
+
+  console.log("currentProperty == " + JSON.stringify(currentProperty));
   function searchsend(city, query) {
     const searchParam = { city: city, query: query };
     const res = fetch("http://localhost:5000/search", {
@@ -281,27 +285,13 @@ const HomeComponent = () => {
           maxWidth: 800,
         }}
       />
-      <h3 class="mt-4 mx-2">Available Properties</h3>
-      <div class="row">
-        {currentProperty.map((property) => {
-          return (
-            <PropertyList
-              propertyName={property.propertyName}
-              imageName={property.imageName}
-              description={property.description}
-              type={property.type}
-              bedrooms={property.bedrooms}
-              bathrooms={property.bathrooms}
-              yearBuilt={property.yearBuilt}
-              pricePerSqft={property.pricePerSqft}
-              area={property.area}
-              location={property.location}
-            />
-          );
-        })}
+      <h3 className="mt-4 mx-2">Available Properties</h3>
+      <div className="row">
+        <PropertyList property={currentProperty} loading={loading} />
         <Paginate
           propertiesPerPage={propertiesPerPage}
-          totalProperties={listOfProperties.length}
+          totalProperties={Array.from(property).length}
+          paginate={paginate}
         />
       </div>
     </div>

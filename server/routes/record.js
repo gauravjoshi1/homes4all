@@ -235,6 +235,26 @@ app.route("/search").post((req, response) => {
 
 
 	});
+
+  app.route("/properties").get(function (req, res) {
+
+    let db_connect = dbo.getDb("homes4all");
+    
+    db_connect
+    
+    .collection("Property")
+    
+    .find({})
+    
+    .toArray(function (err, result) {
+    
+    if (err) throw err;
+    
+    res.json(result);
+    
+    });
+    
+    });
   
 
 
