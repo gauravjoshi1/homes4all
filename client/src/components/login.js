@@ -84,6 +84,11 @@ const  handleLoginPassword = async e=>{
       loginpassword,
     });
     console.log(token);
+    if(token.error)
+    { setEr(token.error);
+      setOpen(true);
+    }
+ else
     setToken(token);
 
   }

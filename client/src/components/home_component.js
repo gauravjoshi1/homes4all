@@ -4,7 +4,15 @@ import Script from "react-load-script";
 import SearchBar from "material-ui-search-bar";
 import PropertyList from "./PropertyList";
 
+
+
+
+
 const HomeComponent = () => {
+
+
+  
+
   const [query, setQuery] = useState("");
   const [city, setCity] = useState("");
   const listOfProperties = [
@@ -141,8 +149,8 @@ const HomeComponent = () => {
           maxWidth: 800,
         }}
       />
-      <h3 class="mt-4">Available Properties</h3>
-      <div class="row">
+      <h3 className="mt-4">Available Properties</h3>
+      <div className="row">
         {listOfProperties.map((property) => {
           return (
             <PropertyList

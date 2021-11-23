@@ -5,6 +5,8 @@ const dbo = require("../db/conn");
 const ObjectId = require("mongodb").ObjectId;
 const bcrypt = require("bcrypt");
 const jwt = require('jsonwebtoken');
+const multer = require('multer');
+let path = require('path');
 
 app.route("/record").get(function (req, res) {
   let db_connect = dbo.getDb("homes4all");
@@ -89,17 +91,49 @@ app.route("/getTypes").get(function (req, res) {
     });
 });
 
+let dt="";
+let imgname="";
 
-app.route("/addProperty").post(async function (req, res) {
+const storage = multer.diskStorage({
+  destination: function(req, file, cb) {
+      cb(null, 'images');
+  },
+  filename: function(req, file, cb) {    
+    dt= Date.now();
+    imgname=file.originalname;
+    
+      cb(null,  dt + path.extname(file.originalname));
+  }
+});
+
+const fileFilter = (req, file, cb) => {
+  const allowedFileTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+  if(allowedFileTypes.includes(file.mimetype)) {
+      cb(null, true);
+  } else {
+      cb(null, false);
+  }
+}
+
+let upload = multer({ storage, fileFilter });
+
+
+
+
+app.route("/addProperty").post(upload.single('photo'), async(req, res) => {
+  
+
   let db_connect = dbo.getDb();
   var Property = db_connect.collection("Property")  
+  
 
     const createdProperty = await Property.insertOne({
       bathrooms:req.body.bathrooms, 
       bedrooms: req.body.bedrooms, 
       area: req.body.area,pricePerSqft:req.body.pricePerSqft,
       description:req.body.description,
-      location:req.body.location
+      location:req.body.location,
+      image:dt + path.extname(imgname)
       
     });
 if(createdProperty){
@@ -111,6 +145,7 @@ else
   res.status(400).json({errror:"Unable to add user"})
 
 }
+
 
 
 });
@@ -235,6 +270,19 @@ app.route("/search").post((req, response) => {
 
 
 	});
+
+
+  app.route("/properties").get(function (req, res) {
+    let db_connect = dbo.getDb("homes4all");
+    db_connect
+      .collection("Property")
+      .find({})
+      .toArray(function (err, result) {
+        if (err) throw err;
+        res.json(result);
+      });
+  });
+
   
 
 

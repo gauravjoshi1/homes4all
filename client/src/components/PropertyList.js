@@ -22,31 +22,31 @@ const PropertyList = (props) => {
     });
 
   return (
-    <div class="card col-sm card-styling style-photos m-2 p-1">
+    <div className="card col-sm card-styling style-photos m-2 p-1">
       <img
-        class="card-img-top p-3"
+        className="card-img-top p-3"
         src={props.imageName}
         alt="An image of a building in Seattle"
       />
-      <div class="card-body">
-        <p class="card-text text-center">{props.propertyName}</p>
+      <div className="card-body">
+        <p className="card-text text-center">{props.propertyName}</p>
         <div
-          class="btn-toolbar"
+          className="btn-toolbar"
           role="toolbar"
           aria-label="Toolbar with button groups"
         >
           <div
-            class="btn-group me-2 mx-3"
+            className="btn-group me-2 mx-3"
             role="group"
             aria-label="view and search buttons"
           >
-            <button type="button" class="btn btn-info" onClick={handleClick}>
+            <button type="button" className="btn btn-info" onClick={handleClick}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="16"
                 height="16"
                 fill="currentColor"
-                class="bi bi-eye-fill"
+                className="bi bi-eye-fill"
                 viewBox="0 0 16 16"
               >
                 <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"></path>
@@ -56,21 +56,21 @@ const PropertyList = (props) => {
             </button>
           </div>
           <div
-            class="btn-group me-2"
+            className="btn-group me-2"
             role="group"
             aria-label="view and search buttons"
           >
-            <button type="button" class="btn btn-danger">
+            <button type="button" className="btn btn-danger">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="16"
                 height="16"
                 fill="currentColor"
-                class="bi bi-heart-fill"
+                className="bi bi-heart-fill"
                 viewBox="0 0 16 16"
               >
                 <path
-                  fill-rule="evenodd"
+                  fillRule="evenodd"
                   d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"
                 ></path>
               </svg>
