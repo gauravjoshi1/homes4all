@@ -12,8 +12,8 @@ await axios({
   headers: { "Content-Type": "multipart/form-data" },
 })
   .then(function (response) {
-    //handle success
-    console.log(response);
+   
+    window.location.href = '/';
   })
   .catch(function (response) {
     //handle error

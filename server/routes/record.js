@@ -101,6 +101,7 @@ const storage = multer.diskStorage({
   filename: function(req, file, cb) {    
     dt= Date.now();
     imgname=file.originalname;
+    console.log("file:" +file.originalname);
     
       cb(null,  dt + path.extname(file.originalname));
   }
@@ -293,13 +294,56 @@ app.route("/register").post( async function (req, res) {
 
 });
 
-app.route("/search").post((req, response) => {
+app.route("/search").post(async (req, response) => {
 	
-  console.log(req.body.city);
+  // const city = req.body.city; console.log(city);
+  // if(city)
+  // var cityregex = '^' + city;
+
+  // let db_connect = dbo.getDb("homes4all");
+  //  const collection= db_connect
+  //     .collection("Property");
+
+  //     collection.find({
+  //       location: {
+  //           $regex: cityregex,
+  //           $options: 'i'
+  //       }
+  //   }, function(err, results) {
+
+
+  //       if (err) throw err;
+  //       response.status(201).json(results);
+  //       });
+
+
+  let db_connect = dbo.getDb();
+  var property = db_connect.collection("Property")
+   const city = String(req.body.city); console.log(city);
+  const loc = await property.find(
+    
+    {location: {$regex:'^'+city, $options:'i'} // sanitize: convert email to lowercase
+    
+  },
+  
+  
+  
+  
+  ).toArray(function (err, result) {
+    if (err) throw err;
+    response.json(result);
+  });
+
+ 
 
 
 
-	});
+
+    });
+
+
+
+
 
 
   app.route("/properties").get(function (req, res) {
