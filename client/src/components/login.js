@@ -5,6 +5,7 @@ import Snackbar from "@material-ui/core/Snackbar";
 import IconButton from "@material-ui/core/IconButton";
 import FormErrors from "./formErrors";
 
+
 async function loginUser(credentials) {
   return fetch("http://localhost:5000/login", {
     method: "POST",
@@ -38,7 +39,7 @@ export default function Login({ setToken }) {
   const [registeremail, setRegisterEmail] = useState();
   const [registerpassword, setRegisterPassword] = useState();
   const [er, setEr] = useState();
-  const [formEr = { Password: "" }, setFormEr] = useState();
+  const [formEr = { passwordLength: "", passwordContains:"" }, setFormEr] = useState();
   const handleToClose = (event, reason) => {
     if ("clickaway" == reason) return;
     setOpen(false);
@@ -65,9 +66,9 @@ export default function Login({ setToken }) {
     let formErrors = { Password: "" };
 
     if (e.target.value.length <= 6)
-      formErrors.Password += "Password length must be greater than 6.";
+      formErrors.passwordLength = "Password length > than 6.";
     if (!/\d/.test(password))
-      formErrors.Password += " Password should have atleast a digit ";
+      formErrors.passwordContains = " Add atleast 1 digit ";
 
     setFormEr(formErrors);
   };
@@ -86,7 +87,7 @@ export default function Login({ setToken }) {
     } else setToken(token);
   };
   return (
-    <div>
+    <div >
       <Snackbar
         anchorOrigin={{
           horizontal: "left",
@@ -111,61 +112,77 @@ export default function Login({ setToken }) {
       />
 
       <div className="login-wrapper">
-        <h1>Please Log In</h1>
-        <form onSubmit={handleSubmit}>
-          <label>
-            <p>Username(email)</p>
-            <input 
+      <img class="img-fluid w-50 image-wrapper" src="\Homes4all-logos_transparent.png"/>
+     
+
+   
+
+        <h1>Please Log In</h1>  
+        <form className="w-50" onSubmit={handleSubmit}>
+          
+          <div className="form-control">
+          <label for="username">Username</label>
+            <input  className="form-control" id="username"
               type="text"
               onChange={(e) => setLoginUserName(e.target.value)}
             />
-          </label>
-          <label>
-            <p>Password</p>
+         
+         
+          <label for="passowrd">Password</label>
+            
             <input
-              type="password"
+              type="password" className="form-control" id="password"
               onChange={(e) => setLoginPassword(e.target.value)}
             />
-          </label>
+        
+         
           <div>
-            <button type="submit">Submit</button>
+          <button type="submit" class="btn btn-primary mt-3 ">Sign in</button>
+          </div>
           </div>
         </form>
-      </div>
+     
+     
 
-      <div className="register-wrapper">
+     
+      
+
+   
         <h1>Register</h1>
-        <form onSubmit={handleRegisterSubmit}>
-          <label>
-            <p>Name</p>
-            <input
+        <form className="w-50" onSubmit={handleRegisterSubmit}>
+          
+          <div className="form-control">
+          <label for="name">Name</label>
+           
+            <input className="form-control" id="name"
               type="text"
               onChange={(e) => setRegisterName(e.target.value)}
             />
-          </label>
-          <label>
-            <p>Email</p>
+        
+        <label for="email">Email</label>
+           
             <input
-              type="email"
+              type="email" className="form-control" id="email"
               onChange={(e) => setRegisterEmail(e.target.value)}
             />
-          </label>
-          <label>
-            <p>Password</p>
-            <input type="password" onChange={handleLoginPassword} />
-          </label>
-          <div className="panel panel-default">
+      
+      <label for="password">Password</label>
+           
+            <input className="form-control" id="password" type="password" onChange={handleLoginPassword} />
+          
+          <div className="panel panel-default ">
             <FormErrors formErrors={formEr} />
           </div>
-          <button
-            type="submit"
-            disabled={formEr.Password.length > 0 ? true : false}
-          >
-            Submit
-          </button>
+
+          <button disabled={(  (formEr.passwordLength&& formEr.passwordLength.length > 0 )|| (formEr.passwordContains &&formEr.passwordContains.length>0)) ? true : false} type="submit" class="btn btn-success mt-3 ">Register</button>
+         </div> 
+        
         </form>
+        </div>
+       
+        
       </div>
-    </div>
+   
   );
 }
 

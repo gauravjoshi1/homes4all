@@ -3,12 +3,14 @@ import React, { useState } from "react";
 
 import Navbar from "./components/navbar";
 import Edit from "./components/edit";
-import Create from "./components/create";
+
 import HomeComponent from "./components/home_component";
 import Login from "./components/login";
 import useToken from "./useToken";
 import NewProperty from "./components/NewProperty";
 import AddPropertyComponent from "./components/addproperty_component";
+import CartComponent from "./components/cart_component";
+
 
 
 const App = () => {
@@ -22,15 +24,17 @@ const App = () => {
       <Navbar />
       <Routes>
         <Route exact path="/" element={<HomeComponent />} />
-        {/* <Route path="/edit/:id" component={Edit} /> */}
-        <Route path="/create" element={<Create />} />
+      
         <Route path="/property" element={<NewProperty />} />
+        <Route exact path="/cart" element={<CartComponent />}/>
         <Route exact path="/" element={<HomeComponent />}>
+        
+
 
         </Route>
  
         <Route path="/edit/:id" component={Edit} />
-        <Route path="/create" element={<Create />}/>
+        
         <Route path="/addProp" element={<AddPropertyComponent/>}/>
 
         

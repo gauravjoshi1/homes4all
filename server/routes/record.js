@@ -61,7 +61,7 @@ app.route("/update/:id").post(function (req, response) {
     .collection("records")
     .updateOne(myquery, newvalues, function (err, res) {
       if (err) throw err;
-      console.log("1 document updated");
+     
       response.json(res);
     });
 });
@@ -72,7 +72,7 @@ app.route("/:id").delete((req, response) => {
   let myquery = { _id: ObjectId( req.params.id )};
   db_connect.collection("records").deleteOne(myquery, function (err, obj) {
     if (err) throw err;
-    console.log("1 document deleted");
+ 
     response.status(obj);
   });
 });
@@ -101,7 +101,7 @@ const storage = multer.diskStorage({
   filename: function(req, file, cb) {    
     dt= Date.now();
     imgname=file.originalname;
-    console.log("file:" +file.originalname);
+   
     
       cb(null,  dt + path.extname(file.originalname));
   }
@@ -169,12 +169,12 @@ app.route("/editProperty").post(upload.single('photo'), async(req, response) => 
 
     },
   };
-  console.log(ObjectId(req.body._id));
+  
   db_connect
     .collection("Property")
     .updateOne(myquery, newvalues, function (err, res) {
       if (err) throw err;
-      console.log("1 document updated");
+  
       response.json(res);
     });
 
@@ -187,6 +187,12 @@ app.route("/login").post(async function (req, res) {
     let db_connect = dbo.getDb();
     var User = db_connect.collection("Users")
     const { loginusername, loginpassword} = req.body;  
+    if (!(loginusername) || !(loginpassword )) {
+      res.status(400).json({error:"All input is required"});
+  
+    }
+
+
     const user = await User.findOne({
       
       email: loginusername.toLowerCase(), // sanitize: convert email to lowercase
@@ -360,7 +366,7 @@ app.route("/search").post(async (req, response) => {
 
   app.route("/getCart").post(async function (req, res) {
     let db_connect = dbo.getDb("homes4all");
-    console.log("hey"+JSON.stringify(req.body.id))
+    
     db_connect
       .collection("UserCart")
       .find({userid:req.body.id})
@@ -369,6 +375,36 @@ app.route("/search").post(async (req, response) => {
         res.json(result);
       });
   });
+
+
+  app.route("/getCartProperties").post(async function (req, res) {
+    let db_connect = dbo.getDb("homes4all");
+   
+    const cartVals= await db_connect
+      .collection("UserCart")
+      .findOne({userid:req.body.id},{propertyid:1, _id:0,userid:0})
+      
+     const vals=[]
+     cartVals.propertyid.forEach(element => {
+      vals.push( ObjectId(element));
+      console.log("E "+element)
+       
+     }); 
+     
+   const propertyVals = await db_connect.collection("Property").find( { _id : { $in : vals } } ).toArray();
+    
+   
+   console.log(propertyVals);
+     return res.json(propertyVals);
+
+
+
+
+
+  });
+
+
+
 
   app.route("/softDelete").post(async function (req, res) {
     let db_connect = dbo.getDb("homes4all");
@@ -410,6 +446,27 @@ else
     
 
   });
+
+
+  app.route("/removeFromCart").post(async function (req, res) {
+    
+    let db_connect = dbo.getDb();
+    var Cart = db_connect.collection("UserCart")  
+    
+   const remove= Cart.update({ userid: req.body.userid },
+       { $pull: { 'propertyid': req.body.propertyid }}
+     );
+        
+  console.log(remove);
+
+  res.json();
+      
+  
+    });
+
+
+
+  
 
 
   

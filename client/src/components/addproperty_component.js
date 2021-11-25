@@ -32,7 +32,7 @@ export default class addproperty_component extends Component {
     constructor(props) {
     super(props);
 
-    this.state = { typeData: [],imageData: new FormData() };
+    this.state = { typeData: [] };
     this.data ={bedrooms:"",bathrooms:"",location:"",area:"",pricePerSqft:"",description:""};
    this.formData= new FormData();
     }

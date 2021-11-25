@@ -43,7 +43,7 @@ const HomeComponent = () => {
         },
         body:JSON.stringify({id:token._id}),
       }).then((data) => data.json());
-        console.log(res);
+       
     if(res.length>0 && res[0].propertyid && res[0].propertyid.length>0)
     { 
       setCart(res[0].propertyid);
@@ -65,8 +65,7 @@ const HomeComponent = () => {
      else prop.disable=false;
      
    })
-  console.log("cart"+cart);
-   console.log("pp"+JSON.stringify(property));
+ 
 
 
 
@@ -75,13 +74,15 @@ const HomeComponent = () => {
     indexOfLatestProperty
   );
 
+  console.log("CP"+JSON.stringify(currentProperty));
+
   //change page
   const paginate = (pageNumber) => setCurrentPage(pageNumber)
 
   
-  function searchsend(city, query) {
-    const searchParam = { city: city, query: query };
-    const res = fetch("http://localhost:5000/search", {
+  async function searchsend(city) {
+    const searchParam = { city: city };
+    const res = await fetch("http://localhost:5000/search", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -121,23 +122,34 @@ const HomeComponent = () => {
     autocompleteRef.current.addListener("place_changed", handlePlaceSelect);
   };
 
-  const handlePlaceSelect = () => {
+  const handlePlaceSelect = async () => {
     // Extract City From Address Object
-    console.log(autocompleteRef);
+ 
     const addressObject = autocompleteRef.current.getPlace();
     const address = addressObject.address_components;
-
+     let val;
     // Check if address is valid
-    if (address.length > 0) {
+    if (address && address.length > 0) {
       setCity(address[0].long_name);
       setQuery(addressObject.formatted_address);
 
-      const val = searchsend(
+      val = await searchsend(
         address[0].long_name,
         addressObject.formatted_address
-      );
+      ).then(e=>{
+                   setProperty(e);
+       });
+
     }
+   
   };
+
+
+
+
+
+
+
 
   return (
     <div>
@@ -145,6 +157,7 @@ const HomeComponent = () => {
         url="https://maps.googleapis.com/maps/api/js?key=AIzaSyDDVzrusSOTLiMsSL3phSsJGw7QjZphoUE&libraries=places"
         onLoad={handleScriptLoad}
       />
+      <span class="border border-primary">
       <SearchBar
         id="autocomplete"
         placeholder=""
@@ -154,9 +167,12 @@ const HomeComponent = () => {
           maxWidth: 800,
         }}
       />
+      </span>
+  
+     
       <h3 className="mt-4 mx-2">Available Properties</h3>
       <div className="row">
-        <PropertyList property={currentProperty} loading={loading} />
+        <PropertyList property={currentProperty} loading={loading} isCart={false} />
         <Paginate
           propertiesPerPage={propertiesPerPage}
           totalProperties={Array.from(property).length}

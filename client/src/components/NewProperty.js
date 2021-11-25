@@ -83,7 +83,7 @@ const resetEdit = async() => {seteditDetails(false);}
     <>
       <h1 class="mt-4">{propertyItem.propertyName} {costOfApartment}</h1>
       <div> 
-        <img src={"/"+propertyItem.image} class="img-responsive" alt={propertyItem.propertyName} width="304" height="236" />
+        <img src={"/"+propertyItem.image} onError={(e)=>{e.target.onerror = null; e.target.src="/default.png"}} class="img-responsive" alt={propertyItem.description} width="304" height="236" />
       </div>
       <h3 class="mt-4">Overview</h3>
       <p>{propertyItem.description}</p>
