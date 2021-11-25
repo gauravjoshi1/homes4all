@@ -1,12 +1,14 @@
 /* eslint-disable jsx-a11y/img-redundant-alt */
-import React from "react";
-import { useState, useNavigate } from "react-router-dom";
+import {React,useState} from "react";
+import { useNavigate } from "react-router-dom";
+import axios from 'axios';
 
 
 
 const PropertyList = ({ property, loading }) => {
   const propertyArr = Array.from(property);
   const navigate = useNavigate();
+
 
   const handleClick = (propertyItem) =>
     navigate("/property", {
@@ -15,6 +17,36 @@ const PropertyList = ({ property, loading }) => {
       },
     });
 
+    const favorite = async (propertyItem) =>{
+     
+      const token = JSON.parse(sessionStorage.getItem('token'));
+      const userID=token._id;
+       const body ={userid:userID, propertyid:propertyItem._id}
+
+      await axios({
+        method: "post",
+        url: "http://localhost:5000/addToCart",
+        data: body,
+        headers: { "Content-Type": "application/json",},
+      })
+        .then(function (response) {
+          window.location.href = '/';
+       
+        })
+        .catch(function (response) {
+          //handle error
+          
+        });
+
+
+    }
+   
+   
+  
+
+
+
+
   if (loading) {
     return <h2>Loading .... </h2>;
   }
@@ -22,13 +54,10 @@ const PropertyList = ({ property, loading }) => {
   return (
     <>
       {propertyArr.map((propertyItem) => {
-        console.log("A property item " + JSON.stringify(propertyItem));
-        console.log(
-          "A property item " + JSON.stringify(propertyItem.description)
-        );
+       
         const imageSource =
           "../../../server/images/" + JSON.stringify(propertyItem.image).slice(1, -1);
-        console.log(JSON.stringify(imageSource));
+        
         return (
           <div
             key={JSON.stringify(propertyItem.id)}
@@ -77,7 +106,7 @@ const PropertyList = ({ property, loading }) => {
                   role="group"
                   aria-label="view and search buttons"
                 >
-                  <button type="button" className="btn btn-danger">
+                  <button type="button" disabled={propertyItem.disable} onClick={() => favorite(propertyItem)} className="btn btn-danger">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="16"

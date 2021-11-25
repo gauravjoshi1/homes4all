@@ -357,6 +357,19 @@ app.route("/search").post(async (req, response) => {
       });
   });
 
+
+  app.route("/getCart").post(async function (req, res) {
+    let db_connect = dbo.getDb("homes4all");
+    console.log("hey"+JSON.stringify(req.body.id))
+    db_connect
+      .collection("UserCart")
+      .find({userid:req.body.id})
+      .toArray(function (err, result) {
+        if (err) throw err;
+        res.json(result);
+      });
+  });
+
   app.route("/softDelete").post(async function (req, res) {
     let db_connect = dbo.getDb("homes4all");
     console.log("ID: "+req.body._id)
@@ -369,13 +382,35 @@ app.route("/search").post(async (req, response) => {
     const property= db_connect.collection("Property");
     const result = await property.updateOne(filter, updateDoc);
     res.json(result);
-     
-
-
-
-
 
   });
+
+
+  app.route("/addToCart").post(async function (req, res) {
+    
+  let db_connect = dbo.getDb();
+  var Cart = db_connect.collection("UserCart")  
+  
+
+  const query = { userid: req.body.userid };
+  const update = { $push: { propertyid:req.body.propertyid }};
+  const options = { upsert: true };
+  const addcart = await Cart.updateOne(query, update, options);
+      
+   
+if(addcart){
+res.status(201).json(addcart);
+
+}
+else
+{
+  res.status(400).json({errror:"Unable to add to cart"})
+
+}
+    
+
+  });
+
 
   
 

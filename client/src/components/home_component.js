@@ -16,9 +16,13 @@ const HomeComponent = () => {
   const [city, setCity] = useState("");
 
   const [property, setProperty] = useState([]);
+  const [cart, setCart] = useState([]);
   const [loading, setloading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [propertiesPerPage] = useState(4);
+  
+  
+  
 
   useEffect(() => {
     const fetchProperty = async () => {
@@ -28,13 +32,44 @@ const HomeComponent = () => {
       setloading(false);
     };
 
+    const fetchCart = async () => { 
+      
+      const token =  await JSON.parse(sessionStorage.getItem('token'));
+      const res =  await fetch("http://localhost:5000/getCart", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body:JSON.stringify({id:token._id}),
+      }).then((data) => data.json());
+        console.log(res);
+    if(res.length>0 && res[0].propertyid && res[0].propertyid.length>0)
+    { 
+      setCart(res[0].propertyid);
+    }
+     
+      }
+      
     fetchProperty();
+    fetchCart();
   }, []);
 
-  console.log("property " + property);
+  
 
   const indexOfLatestProperty = currentPage * propertiesPerPage;
   const indexOfFirstProperty = indexOfLatestProperty - propertiesPerPage;
+   property.forEach(prop=>{
+     if(cart.includes(prop._id))
+     prop.disable=true;
+     else prop.disable=false;
+     
+   })
+  console.log("cart"+cart);
+   console.log("pp"+JSON.stringify(property));
+
+
+
   const currentProperty = Array.from(property).slice(
     indexOfFirstProperty,
     indexOfLatestProperty
@@ -43,7 +78,7 @@ const HomeComponent = () => {
   //change page
   const paginate = (pageNumber) => setCurrentPage(pageNumber)
 
-  console.log("currentProperty == " + JSON.stringify(currentProperty));
+  
   function searchsend(city, query) {
     const searchParam = { city: city, query: query };
     const res = fetch("http://localhost:5000/search", {
