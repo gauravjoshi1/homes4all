@@ -6,12 +6,7 @@ import PropertyList from "./PropertyList";
 import Paginate from "./Paginate";
 import axios from "axios";
 
-
 const HomeComponent = () => {
-
-
-  
-
   const [query, setQuery] = useState("");
   const [city, setCity] = useState("");
 
@@ -19,67 +14,53 @@ const HomeComponent = () => {
   const [cart, setCart] = useState([]);
   const [loading, setloading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [propertiesPerPage] = useState(4);
-  
-  
-  
+  const [propertiesPerPage] = useState(6);
 
   useEffect(() => {
     const fetchProperty = async () => {
       setloading(true);
-      const res = await axios.get('http://localhost:5000/properties');
-      setProperty(res.data)
+      const res = await axios.get("http://localhost:5000/properties");
+      setProperty(res.data);
       setloading(false);
     };
 
-    const fetchCart = async () => { 
-      
-      const token =  await JSON.parse(sessionStorage.getItem('token'));
-      const res =  await fetch("http://localhost:5000/getCart", {
+    const fetchCart = async () => {
+      const token = await JSON.parse(sessionStorage.getItem("token"));
+      const res = await fetch("http://localhost:5000/getCart", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
         },
-        body:JSON.stringify({id:token._id}),
+        body: JSON.stringify({ id: token._id }),
       }).then((data) => data.json());
-       
-    if(res.length>0 && res[0].propertyid && res[0].propertyid.length>0)
-    { 
-      setCart(res[0].propertyid);
-    }
-     
+
+      if (res.length > 0 && res[0].propertyid && res[0].propertyid.length > 0) {
+        setCart(res[0].propertyid);
       }
-      
+    };
+
     fetchProperty();
     fetchCart();
   }, []);
 
-  
-
   const indexOfLatestProperty = currentPage * propertiesPerPage;
   const indexOfFirstProperty = indexOfLatestProperty - propertiesPerPage;
-   property.forEach(prop=>{
-     if(cart.includes(prop._id))
-     prop.disable=true;
-     else prop.disable=false;
-     
-   })
- 
-
-
+  property.forEach((prop) => {
+    if (cart.includes(prop._id)) prop.disable = true;
+    else prop.disable = false;
+  });
 
   const currentProperty = Array.from(property).slice(
     indexOfFirstProperty,
     indexOfLatestProperty
   );
 
-  console.log("CP"+JSON.stringify(currentProperty));
+  console.log("CP" + JSON.stringify(currentProperty));
 
   //change page
-  const paginate = (pageNumber) => setCurrentPage(pageNumber)
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-  
   async function searchsend(city) {
     const searchParam = { city: city };
     const res = await fetch("http://localhost:5000/search", {
@@ -105,10 +86,11 @@ const HomeComponent = () => {
     }; // To disable any eslint 'google not defined' errors
 
     // Initialize Google Autocomplete
-    /*global google*/ autocompleteRef.current = new google.maps.places.Autocomplete(
-      document.getElementById("autocomplete"),
-      options
-    );
+    /*global google*/ autocompleteRef.current =
+      new google.maps.places.Autocomplete(
+        document.getElementById("autocomplete"),
+        options
+      );
 
     // Avoid paying for data that you don't need by restricting the set of
     // place fields that are returned to just the address components and formatted
@@ -124,10 +106,10 @@ const HomeComponent = () => {
 
   const handlePlaceSelect = async () => {
     // Extract City From Address Object
- 
+
     const addressObject = autocompleteRef.current.getPlace();
     const address = addressObject.address_components;
-     let val;
+    let val;
     // Check if address is valid
     if (address && address.length > 0) {
       setCity(address[0].long_name);
@@ -136,20 +118,11 @@ const HomeComponent = () => {
       val = await searchsend(
         address[0].long_name,
         addressObject.formatted_address
-      ).then(e=>{
-                   setProperty(e);
-       });
-
+      ).then((e) => {
+        setProperty(e);
+      });
     }
-   
   };
-
-
-
-
-
-
-
 
   return (
     <div>
@@ -158,21 +131,25 @@ const HomeComponent = () => {
         onLoad={handleScriptLoad}
       />
       <span class="border border-primary">
-      <SearchBar
-        id="autocomplete"
-        placeholder=""
-        value={query}
-        style={{
-          margin: "0 auto",
-          maxWidth: 800,
-        }}
-      />
+        <SearchBar
+          id="autocomplete"
+          placeholder="Search with your favourite locations..."
+          value={query}
+          style={{
+            margin: "0 auto",
+            maxWidth: 800,
+          }}
+        />
       </span>
-  
-     
-      <h3 className="mt-4 mx-2">Available Properties</h3>
-      <div className="row">
-        <PropertyList property={currentProperty} loading={loading} isCart={false} />
+
+      <h3 className="text-dark mt-4 mx-2">Available Properties</h3>
+      <hr />
+      <div className="row ms-3">
+        <PropertyList
+          property={currentProperty}
+          loading={loading}
+          isCart={false}
+        />
         <Paginate
           propertiesPerPage={propertiesPerPage}
           totalProperties={Array.from(property).length}

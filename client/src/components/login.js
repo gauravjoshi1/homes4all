@@ -3,8 +3,8 @@ import "./login.css";
 import PropTypes from "prop-types";
 import Snackbar from "@material-ui/core/Snackbar";
 import IconButton from "@material-ui/core/IconButton";
+import { NavLink } from "react-router-dom";
 import FormErrors from "./formErrors";
-
 
 async function loginUser(credentials) {
   return fetch("http://localhost:5000/login", {
@@ -39,7 +39,8 @@ export default function Login({ setToken }) {
   const [registeremail, setRegisterEmail] = useState();
   const [registerpassword, setRegisterPassword] = useState();
   const [er, setEr] = useState();
-  const [formEr = { passwordLength: "", passwordContains:"" }, setFormEr] = useState();
+  const [formEr = { passwordLength: "", passwordContains: "" }, setFormEr] =
+    useState();
   const handleToClose = (event, reason) => {
     if ("clickaway" == reason) return;
     setOpen(false);
@@ -86,8 +87,11 @@ export default function Login({ setToken }) {
       setOpen(true);
     } else setToken(token);
   };
+
+  
+
   return (
-    <div >
+    <div>
       <Snackbar
         anchorOrigin={{
           horizontal: "left",
@@ -110,79 +114,119 @@ export default function Login({ setToken }) {
           </React.Fragment>
         }
       />
-
-      <div className="login-wrapper">
-      <img class="img-fluid w-50 image-wrapper" src="\Homes4all-logos_transparent.png"/>
-     
-
-   
-
-        <h1>Please Log In</h1>  
-        <form className="w-50" onSubmit={handleSubmit}>
-          
-          <div className="form-control">
-          <label for="username">Username</label>
-            <input  className="form-control" id="username"
-              type="text"
-              onChange={(e) => setLoginUserName(e.target.value)}
-            />
-         
-         
-          <label for="passowrd">Password</label>
-            
-            <input
-              type="password" className="form-control" id="password"
-              onChange={(e) => setLoginPassword(e.target.value)}
-            />
-        
-         
-          <div>
-          <button type="submit" class="btn btn-primary mt-3 ">Sign in</button>
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+          <NavLink className="navbar-brand text-black me-4 fw" to="/">
+            <i class="fas fa-house-damage me-1"></i>
+            Homes4All
+          </NavLink>
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <form
+              class="d-flex navbar-nav ms-auto me-2"
+              onSubmit={handleSubmit}
+            >
+              <input
+                class="form-control me-2"
+                id="username"
+                type="text"
+                placeholder="User Name..."
+                aria-label="username"
+                onChange={(e) => setLoginUserName(e.target.value)}
+              />
+              <input
+                class="form-control me-2"
+                type="password"
+                placeholder="Password..."
+                aria-label="Password"
+                id="password"
+                onChange={(e) => setLoginPassword(e.target.value)}
+              />
+              <button
+                class="btn btn-outline-light text-white me-2"
+                type="submit"
+              >
+                Login
+              </button>
+            </form>
           </div>
-          </div>
-        </form>
-     
-     
-
-     
-      
-
-   
-        <h1>Register</h1>
-        <form className="w-50" onSubmit={handleRegisterSubmit}>
-          
-          <div className="form-control">
-          <label for="name">Name</label>
-           
-            <input className="form-control" id="name"
-              type="text"
-              onChange={(e) => setRegisterName(e.target.value)}
-            />
-        
-        <label for="email">Email</label>
-           
-            <input
-              type="email" className="form-control" id="email"
-              onChange={(e) => setRegisterEmail(e.target.value)}
-            />
-      
-      <label for="password">Password</label>
-           
-            <input className="form-control" id="password" type="password" onChange={handleLoginPassword} />
-          
-          <div className="panel panel-default ">
-            <FormErrors formErrors={formEr} />
-          </div>
-
-          <button disabled={(  (formEr.passwordLength&& formEr.passwordLength.length > 0 )|| (formEr.passwordContains &&formEr.passwordContains.length>0)) ? true : false} type="submit" class="btn btn-success mt-3 ">Register</button>
-         </div> 
-        
-        </form>
         </div>
-       
-        
+      </nav>
+      <div className="maincontainer">
+        <div class="container-fluid">
+          <div class="row no-gutter">
+            <div class="col-md-6 d-none d-md-flex bg-image"></div>
+            <div class="col-md-6 bg-light">
+              <div class="login d-flex align-items-center py-5">
+                <div class="container">
+                  <div class="row">
+                    <div class="col-lg-10 col-xl-7 mx-auto">
+                      <h4 className="text-dark mb-4">Dont have an account?</h4>
+                      <h3 class="display-5 mb-5 text-primary">Register</h3>
+                      <form onSubmit={handleRegisterSubmit}>
+                        <div class="mb-5">
+                          <input
+                            id="name"
+                            type="text"
+                            placeholder="User Name..."
+                            required=""
+                            autofocus=""
+                            class="form-control border-0 shadow-sm px-4"
+                            onChange={(e) => setRegisterName(e.target.value)}
+                          />
+                        </div>
+                        <div class="mb-5">
+                          <input
+                            type="email"
+                            id="email"
+                            placeholder="Email Address..."
+                            required=""
+                            autofocus=""
+                            class="form-control border-0 shadow-sm px-4"
+                            onChange={(e) => setRegisterEmail(e.target.value)}
+                          />
+                        </div>
+                        <div class="mb-5">
+                          <input
+                            id="inputPassword"
+                            type="password"
+                            placeholder="Password..."
+                            required=""
+                            class="form-control border-0 shadow-sm px-4 text-primary"
+                            onChange={handleLoginPassword}
+                          />
+                        </div>
+                        <div className="panel panel-default ">
+                          <FormErrors formErrors={formEr} />
+                        </div>
+                        <div class="d-grid gap-2 mb-4">
+                          <button
+                            type="submit"
+                            class="btn btn-primary btn-block text-uppercase mb-2shadow-sm"
+                          >
+                            Sign Up
+                          </button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-   
+    </div>
   );
 }
 
