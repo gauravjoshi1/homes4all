@@ -129,6 +129,7 @@ app.route("/addProperty").post(upload.single('photo'), async(req, res) => {
   
 
     const createdProperty = await Property.insertOne({
+      type:req.body.type,
       bathrooms:req.body.bathrooms, 
       bedrooms: req.body.bedrooms, 
       area: req.body.area,pricePerSqft:req.body.pricePerSqft,
@@ -325,10 +326,11 @@ app.route("/search").post(async (req, response) => {
 
   let db_connect = dbo.getDb();
   var property = db_connect.collection("Property")
-   const city = String(req.body.city); console.log(city);
+   const city = req.body.city?String(req.body.city):'.*';
+   const type = req.body.filter?String(req.body.filter):'.*';
   const loc = await property.find(
     
-    {location: {$regex:'^'+city, $options:'i'} // sanitize: convert email to lowercase
+    {location: {$regex:'^'+city, $options:'i'}, type:{$regex:'^'+type, $options:'i'}
     
   },
   

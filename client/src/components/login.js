@@ -116,7 +116,7 @@ export default function Login({ setToken }) {
       />
       <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
-          <NavLink className="navbar-brand text-black me-4 fw" to="/">
+          <NavLink className="navbar-brand text-white me-4 fw" to="/">
             <i class="fas fa-house-damage me-1"></i>
             Homes4All
           </NavLink>

@@ -60,12 +60,12 @@ const PropertyList = ({ property, loading, isCart }) => {
         return (
           <div className="col-sm col-md-4">
             <div
-              class="card mb-4"
+              className="card mb-4"
               key={JSON.stringify(propertyItem.id)}
               style={{ width: "20rem", height: "30rem" }}
             >
-              <div class="card-header fw-bold text-center">
-                <i class="fas fa-map-marker-alt me-2"></i>
+              <div className="card-header fw-bold text-center">
+                <i className="fas fa-map-marker-alt me-2"></i>
                 {JSON.stringify(propertyItem.location).slice(1, -1)}
               </div>
               <img
@@ -77,17 +77,20 @@ const PropertyList = ({ property, loading, isCart }) => {
                 }}
                 alt="Property Image"
               />
-              <div class="card-body text-center">
-                <p class="card-text">
+              <div className="card-body text-center">
+              <p className="card-text">
+                  {propertyItem.type}
+                </p>
+                <p className="card-text">
                   {JSON.stringify(propertyItem.description).slice(1, -1)}
                 </p>
               </div>
               <div className="row justify-content-center m-2">
-                <div class="btn-group" role="group" aria-label="options">
+                <div className="btn-group" role="group" aria-label="options">
                   <button
                     type="button"
                     onClick={() => handleClick(propertyItem)}
-                    class="btn btn-sm btn-primary"
+                    className="btn btn-sm btn-primary"
                   >
                     View
                   </button>
@@ -96,7 +99,7 @@ const PropertyList = ({ property, loading, isCart }) => {
                     hidden={isCart}
                     disabled={propertyItem.disable}
                     onClick={() => favorite(propertyItem)}
-                    class="btn btn-sm btn-danger ms-2"
+                    className="btn btn-sm btn-danger ms-2"
                     style={{ display: (token.role==='User' ? 'block' : 'none') }}
                   >
                     Favorite
@@ -105,7 +108,7 @@ const PropertyList = ({ property, loading, isCart }) => {
                     type="button"
                     hidden={!isCart}
                     onClick={() => remove(propertyItem)}
-                    class="btn btn-danger"
+                    className="btn btn-danger"
                   >
                     Remove
                   </button>

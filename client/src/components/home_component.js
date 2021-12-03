@@ -9,7 +9,7 @@ import axios from "axios";
 const HomeComponent = () => {
   const [query, setQuery] = useState("");
   const [city, setCity] = useState("");
-
+  const [types,setTypes] = useState([]);
   const [property, setProperty] = useState([]);
   const [cart, setCart] = useState([]);
   const [loading, setloading] = useState(false);
@@ -18,6 +18,14 @@ const HomeComponent = () => {
 
   useEffect(() => {
     const fetchProperty = async () => {
+      setloading(true);
+      const res = await axios.get("http://localhost:5000/getTypes");
+      let dropdown=[{name:'Select your value',value:''}];
+       dropdown.push(...res.data);
+      setTypes(dropdown);
+      setloading(false);
+    };
+    const fetchTypes = async () => {
       setloading(true);
       const res = await axios.get("http://localhost:5000/properties");
       setProperty(res.data);
@@ -39,7 +47,7 @@ const HomeComponent = () => {
         setCart(res[0].propertyid);
       }
     };
-
+    fetchTypes();
     fetchProperty();
     fetchCart();
   }, []);
@@ -56,13 +64,13 @@ const HomeComponent = () => {
     indexOfLatestProperty
   );
 
-  console.log("CP" + JSON.stringify(currentProperty));
+ 
 
   //change page
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-  async function searchsend(city) {
-    const searchParam = { city: city };
+  async function searchSend(city,filter) { console.log(filter);
+    const searchParam = { city: city,filter:filter };
     const res = await fetch("http://localhost:5000/search", {
       method: "POST",
       headers: {
@@ -104,20 +112,45 @@ const HomeComponent = () => {
     autocompleteRef.current.addListener("place_changed", handlePlaceSelect);
   };
 
-  const handlePlaceSelect = async () => {
-    // Extract City From Address Object
 
+  const handleFilter = async (propertyType) =>
+   { 
+     const filterVal = propertyType.target.value;
+     let addressObject = autocompleteRef.current.getPlace();
+     let address,val,city="";
+     if(addressObject)
+      address = addressObject.address_components;
+    if (address && address.length > 0) {
+     
+      city = address[0].long_name;
+      
+    }
+    val = await searchSend(
+     city,filterVal
+      
+    ).then((e) => {
+      setProperty(e);
+    });  
+
+
+
+   }
+
+   const resetPage = () =>{window.location.reload(false);}
+
+  const handlePlaceSelect = async () => {
+    const filterVal= document.getElementById("filter").value; 
     const addressObject = autocompleteRef.current.getPlace();
     const address = addressObject.address_components;
     let val;
-    // Check if address is valid
+
     if (address && address.length > 0) {
       setCity(address[0].long_name);
       setQuery(addressObject.formatted_address);
 
-      val = await searchsend(
-        address[0].long_name,
-        addressObject.formatted_address
+      val = await searchSend(
+        address[0].long_name,filterVal
+        
       ).then((e) => {
         setProperty(e);
       });
@@ -130,7 +163,8 @@ const HomeComponent = () => {
         url="https://maps.googleapis.com/maps/api/js?key=AIzaSyDDVzrusSOTLiMsSL3phSsJGw7QjZphoUE&libraries=places"
         onLoad={handleScriptLoad}
       />
-      <span class="border border-primary">
+     
+      <span className="border border-primary">
         <SearchBar
           id="autocomplete"
           placeholder="Search with your favourite locations..."
@@ -141,7 +175,23 @@ const HomeComponent = () => {
           }}
         />
       </span>
+       <div className="row d-flex justify-content-center">
+    
+      <select className="form-select w-25" id="filter" onChange={(event) =>
+                    handleFilter(event)
+                  } >
+                  {types.map((e, key) => {
+                    return (
+                      <option key={key} value={e.value}>
+                        {e.name}
+                      </option>
+                    );
+                  })}
+                </select>
+              <button className="btn btn-primary col-md-1"  onClick={() => resetPage()}> Reset </button>
 
+               </div> 
+    
       <h3 className="text-dark mt-4 mx-2">Available Properties</h3>
       <hr />
       <div className="row ms-3">

@@ -26,6 +26,7 @@ export default class addproperty_component extends Component {
 
     this.state = { typeData: [] };
     this.data = {
+      type:"",
       bedrooms: "",
       bathrooms: "",
       location: "",
@@ -50,7 +51,7 @@ export default class addproperty_component extends Component {
 
   handleSubmit = async (e) => {
     e.preventDefault();
-
+    this.formData.append("type", this.data.type);
     this.formData.append("bedrooms", this.data.bedrooms);
     this.formData.append("bathrooms", this.data.bathrooms);
     this.formData.append("location", this.data.location);
@@ -76,14 +77,16 @@ export default class addproperty_component extends Component {
     return (
       <div className="container mt-3 ">
         <h3 className="mb-3">Add a new Property</h3>
-        <div class="card mt-2 mb-2" style={{ width: "30rem" }}>
-          <div class="card-body">
+        <div className="card mt-2 mb-2" style={{ width: "30rem" }}>
+          <div className="card-body">
             <form onSubmit={this.handleSubmit}>
               <div className="mb-3">
-                <label for="exampleFormControlInput1" class="form-label">
+                <label for="type" class="form-label">
                   Property Type
                 </label>
-                <select class="form-select">
+                <select class="form-select" onChange={(event) =>
+                    (this.data.type = event.target.value)
+                  } >
                   {this.state.typeData.map((e, key) => {
                     return (
                       <option key={key} value={e.value}>
