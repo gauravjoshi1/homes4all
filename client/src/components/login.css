@@ -1,3 +1,14 @@
+.register,
+.image {
+  min-height: 100vh;
+}
+.bg-image {
+  background-image: url('https://st3.depositphotos.com/3899029/13070/v/600/depositphotos_130701768-stock-illustration-moving-home-transportation.jpg');
+  background-size: cover;
+  background-position: center center;
+}
+
+
 .login-wrapper {
     display: flex;
     flex-direction: column;

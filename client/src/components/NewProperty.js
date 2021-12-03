@@ -81,48 +81,57 @@ const resetEdit = async() => {seteditDetails(false);}
 
   return (
     <>
-      <h1 class="mt-4">{propertyItem.propertyName} {costOfApartment}</h1>
-      <div> 
-        <img src={"/"+propertyItem.image} onError={(e)=>{e.target.onerror = null; e.target.src="/default.png"}} class="img-responsive" alt={propertyItem.description} width="304" height="236" />
-      </div>
-      <h3 class="mt-4">Overview</h3>
-      <p>{propertyItem.description}</p>
-      <h3 class="mt-4">Facts and Features</h3>
-  
-
-      <form onSubmit={handleSubmit}>
-  <div className="form-group w-25">
+    <div className="container mt-3 ">
+        <h3 className="mb-3">Overview</h3>
+        <hr/>
+      <h3 class="my-4">Facts and Features</h3>
+        <div class="card mt-2 mb-2" style={{ width: "30rem" }}>
+        <div class="card-header text-center h3">
+                
+                { costOfApartment }
+              </div>
+        <img
+                className="card-img-top"
+                src={"/" + propertyItem.image}
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = "/default.png";
+                }}
+                alt="Property Image"
+              />
+          <div class="card-body">
+          <form onSubmit={handleSubmit}>
+  <div className="form-group">
   
     <label htmlFor="bedrooms">Bedrooms</label>
     <input className="form-control" onChange={ (event) => data.bedrooms=event.target.value } disabled={!editDetails}type="number" defaultValue={propertyItem.bedrooms}  id="bedrooms" />
   </div>
-  <div className="form-group w-25">
+  <div className="form-group">
   
     <label htmlFor="bathrooms">Bathrooms</label>
     <input className="form-control" onChange={ (event) => data.bathrooms=event.target.value } disabled={!editDetails}type="number" defaultValue={propertyItem.bathrooms}  id="bathrooms" />
   </div>
-  <div className="form-group w-25">
+  <div className="form-group">
   
   <label htmlFor="location">Location</label>
   <input className="form-control" onChange={ (event) => data.location=event.target.value } disabled={!editDetails}type="text" defaultValue={propertyItem.location}  id="location" />
 </div>
-<div className="form-group w-25">
+<div className="form-group">
   
   <label htmlFor="area">Area(sq Ft.)</label>
   <input className="form-control" onChange={ (event) => data.area=event.target.value } disabled={!editDetails}type="number" defaultValue={propertyItem.area}  id="area" />
 </div>
 
-<div className="form-group w-25">
+<div className="form-group">
   
   <label htmlFor="sqft">Price per Sq Ft.</label>
   <input className="form-control" onChange={ (event) => data.pricePerSqft=event.target.value } disabled={!editDetails}type="number" defaultValue={propertyItem.pricePerSqft}  id="sqft" />
 </div>
-<div className="form-group w-25">
+<div className="form-group">
   
   <label htmlFor="description">Description</label>
-  <input className="form-control" onChange={ (event) => data.description=event.target.value } disabled={!editDetails}type="text" defaultValue={propertyItem.description}  id="description" />
+  <textarea className="form-control" onChange={ (event) => data.description=event.target.value } disabled={!editDetails} rows="4" defaultValue={propertyItem.description}  id="description" ></textarea>
 </div>
-
 <input 
                 type="file" 
                 accept=".png, .jpg, .jpeg"
@@ -131,8 +140,8 @@ const resetEdit = async() => {seteditDetails(false);}
                 hidden={!editDetails}
             />
 
-<button type="submit" hidden={!editDetails}  className="btn btn-info" >Submit</button>
-<button type="button" hidden={!editDetails} onClick={resetEdit}  className="btn btn-warning" >Cancel</button>
+<button type="submit" hidden={!editDetails}  className="btn btn-info my-4" >Submit</button>
+<button type="button" hidden={!editDetails} onClick={resetEdit}  className="btn btn-warning my-4" >Cancel</button>
   
   
 </form>
@@ -142,9 +151,13 @@ const resetEdit = async() => {seteditDetails(false);}
 
 
 
-      <button style={{ display: (token.role==='Admin' ? 'block' : 'none') }} type="button" onClick={setEdit} className="btn btn-primary" >Edit property details</button>
+      <button style={{ display: (token.role==='Admin' ? 'block' : 'none') }} type="button" onClick={setEdit} className="btn btn-primary my-4" >Edit property details</button>
 
-      <button style={{ display: (token.role==='Admin' ? 'block' : 'none') }} type="button" onClick={handleClick} className="btn btn-danger" >Delete this property</button>
+      <button style={{ display: (token.role==='Admin' ? 'block' : 'none') }} type="button" onClick={handleClick} className="btn btn-danger my-4" >Delete this property</button>
+ 
+          </div>
+        </div>
+      </div>
     </>
   );
 };

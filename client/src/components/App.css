@@ -1,0 +1,9 @@
+*{
+    padding: 0;
+    margin: 0;
+}
+
+.btn-nav:hover{
+    color: #000 !important;
+    font-weight: 600;
+}

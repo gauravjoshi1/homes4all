@@ -11,33 +11,28 @@ import NewProperty from "./components/NewProperty";
 import AddPropertyComponent from "./components/addproperty_component";
 import CartComponent from "./components/cart_component";
 
-
+import "./components/App.css";
 
 const App = () => {
   const { token, setToken } = useToken();
-  
+
   if (!token) {
     return <Login setToken={setToken} />;
+
   }
   return (
     <div>
       <Navbar />
       <Routes>
         <Route exact path="/" element={<HomeComponent />} />
-      
+        {/* <Route exact path="/login" element={<Login setToken={setToken}/>}></Route> */}
         <Route path="/property" element={<NewProperty />} />
-        <Route exact path="/cart" element={<CartComponent />}/>
-        <Route exact path="/" element={<HomeComponent />}>
+        <Route exact path="/cart" element={<CartComponent />} />
+        <Route exact path="/" element={<HomeComponent />}></Route>
         
-
-
-        </Route>
- 
         <Route path="/edit/:id" component={Edit} />
-        
-        <Route path="/addProp" element={<AddPropertyComponent/>}/>
 
-        
+        <Route path="/addProp" element={<AddPropertyComponent />} />
       </Routes>
     </div>
   );
