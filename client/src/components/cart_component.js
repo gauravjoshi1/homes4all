@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
-import axios from "axios";
+
 import PropertyList from "./PropertyList";
 
 

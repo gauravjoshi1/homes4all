@@ -38,7 +38,7 @@ const PropertyList = ({ property, loading, isCart }) => {
 
     await axios({
       method: "post",
-      url: "http://localhost:5000/removeFromCart",
+      url: "http://localhost:5000/Cart",
       data: body,
       headers: { "Content-Type": "application/json" },
     })
@@ -56,14 +56,14 @@ const PropertyList = ({ property, loading, isCart }) => {
 
   return (
     <>
-      {propertyArr.map((propertyItem) => {
-        return (
+      {propertyArr.map((propertyItem) => { 
+        return ( 
           <div className="col-sm col-md-4">
             <div
               className="card mb-4"
               key={JSON.stringify(propertyItem.id)}
               style={{ width: "20rem", height: "30rem" }}
-            >
+            > 
               <div className="card-header fw-bold text-center">
                 <i className="fas fa-map-marker-alt me-2"></i>
                 {JSON.stringify(propertyItem.location).slice(1, -1)}
@@ -78,11 +78,11 @@ const PropertyList = ({ property, loading, isCart }) => {
                 alt="Property Image"
               />
               <div className="card-body text-center">
-              <p className="card-text">
-                  {propertyItem.type}
-                </p>
+             
+                 
+               
                 <p className="card-text">
-                  {JSON.stringify(propertyItem.description).slice(1, -1)}
+                {propertyItem.type} ${Number(propertyItem.pricePerSqft) * Number(propertyItem.area)}
                 </p>
               </div>
               <div className="row justify-content-center m-2">
@@ -96,13 +96,23 @@ const PropertyList = ({ property, loading, isCart }) => {
                   </button>
                   <button
                     type="button"
-                    hidden={isCart}
-                    disabled={propertyItem.disable}
+                    hidden={isCart|| propertyItem.disable}
+                    
                     onClick={() => favorite(propertyItem)}
                     className="btn btn-sm btn-danger ms-2"
                     style={{ display: (token.role==='User' ? 'block' : 'none') }}
                   >
                     Favorite
+                  </button>
+                  <button
+                    type="button"
+                    hidden={isCart|| !propertyItem.disable}
+                    
+                    disabled={true}
+                    className="btn btn-sm btn-success ms-2"
+                    style={{ display: (token.role==='User' ? 'block' : 'none') }}
+                  >
+                    In cart
                   </button>
                   <button
                     type="button"

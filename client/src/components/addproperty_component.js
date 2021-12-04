@@ -5,7 +5,7 @@ import "./addproperty.css";
 async function saveProperty(formData) {
   await axios({
     method: "post",
-    url: "http://localhost:5000/addProperty",
+    url: "http://localhost:5000/properties",
     data: formData,
     headers: { "Content-Type": "multipart/form-data" },
   })
@@ -20,13 +20,12 @@ async function saveProperty(formData) {
 }
 
 export default class addproperty_component extends Component {
-  // This is the constructor that shall store our data retrieved from the database
   constructor(props) {
     super(props);
 
     this.state = { typeData: [] };
     this.data = {
-      type:"",
+      type:"Villa",
       bedrooms: "",
       bathrooms: "",
       location: "",
@@ -37,7 +36,7 @@ export default class addproperty_component extends Component {
     this.formData = new FormData();
   }
 
-  // This method will get the data from the database.
+ 
   componentDidMount() {
     axios
       .get("http://localhost:5000/getTypes/")
@@ -166,7 +165,7 @@ export default class addproperty_component extends Component {
               </div>
               <div class="mb-3">
                 <label for="price" class="form-label">
-                  Price
+                  Price/SqFt.
                 </label>
                 <input
                   type="text"
@@ -180,7 +179,7 @@ export default class addproperty_component extends Component {
               </div>
               <div class="mb-4">
                 <label for="photo" class="form-label">
-                  Default file input example
+                  Add a photo
                 </label>
                 <input
                   class="form-control"

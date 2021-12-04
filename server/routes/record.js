@@ -8,74 +8,6 @@ const jwt = require('jsonwebtoken');
 const multer = require('multer');
 let path = require('path');
 
-app.route("/record").get(function (req, res) {
-  let db_connect = dbo.getDb("homes4all");
-  db_connect
-    .collection("records")
-    .find({})
-    .toArray(function (err, result) {
-      if (err) throw err;
-      res.json(result);
-    });
-});
-
-// This section will help you get a single record by id
-app.route("/record/:id").get(function (req, res) {
-  let db_connect = dbo.getDb();
-  let myquery = { _id: ObjectId( req.params.id )};
-  db_connect
-      .collection("records")
-      .findOne(myquery, function (err, result) {
-        if (err) throw err;
-        res.json(result);
-      });
-});
-
-// This section will help you create a new record.
-app.route("/record/add").post(function (req, response) {
-  let db_connect = dbo.getDb();
-  let myobj = {
-    person_name: req.body.person_name,
-    person_position: req.body.person_position,
-    person_level: req.body.person_level,
-  };
-  db_connect.collection("records").insertOne(myobj, function (err, res) {
-    if (err) throw err;
-    response.json(res);
-  });
-});
-
-
-// This section will help you update a record by id.
-app.route("/update/:id").post(function (req, response) {
-  let db_connect = dbo.getDb();
-  let myquery = { _id: ObjectId( req.params.id )};
-  let newvalues = {
-    $set: {
-      person_name: req.body.person_name,
-      person_position: req.body.person_position,
-      person_level: req.body.person_level,
-    },
-  };
-  db_connect
-    .collection("records")
-    .updateOne(myquery, newvalues, function (err, res) {
-      if (err) throw err;
-     
-      response.json(res);
-    });
-});
-
-// This section will help you delete a record
-app.route("/:id").delete((req, response) => {
-  let db_connect = dbo.getDb();
-  let myquery = { _id: ObjectId( req.params.id )};
-  db_connect.collection("records").deleteOne(myquery, function (err, obj) {
-    if (err) throw err;
- 
-    response.status(obj);
-  });
-});
 
 
 
@@ -121,7 +53,7 @@ let upload = multer({ storage, fileFilter });
 
 
 
-app.route("/addProperty").post(upload.single('photo'), async(req, res) => {
+app.route("/properties").post(upload.single('photo'), async(req, res) => {
   
 
   let db_connect = dbo.getDb();
@@ -196,7 +128,7 @@ app.route("/login").post(async function (req, res) {
 
     const user = await User.findOne({
       
-      email: loginusername.toLowerCase(), // sanitize: convert email to lowercase
+      email: loginusername.toLowerCase(), 
       
     });
     if(user)
@@ -258,7 +190,7 @@ app.route("/register").post( async function (req, res) {
 
   const createduser = await User.insertOne({
     name:registername, 
-    email: registeremail.toLowerCase(), // sanitize: convert email to lowercase
+    email: registeremail.toLowerCase(), 
     password: encryptedPassword,
     role:'User'
   });
@@ -266,7 +198,7 @@ app.route("/register").post( async function (req, res) {
   {
     const user = await User.findOne({
       
-      email: registeremail.toLowerCase(), // sanitize: convert email to lowercase
+      email: registeremail.toLowerCase(), 
       
     });
 
@@ -303,34 +235,13 @@ app.route("/register").post( async function (req, res) {
 
 app.route("/search").post(async (req, response) => {
 	
-  // const city = req.body.city; console.log(city);
-  // if(city)
-  // var cityregex = '^' + city;
-
-  // let db_connect = dbo.getDb("homes4all");
-  //  const collection= db_connect
-  //     .collection("Property");
-
-  //     collection.find({
-  //       location: {
-  //           $regex: cityregex,
-  //           $options: 'i'
-  //       }
-  //   }, function(err, results) {
-
-
-  //       if (err) throw err;
-  //       response.status(201).json(results);
-  //       });
-
-
   let db_connect = dbo.getDb();
   var property = db_connect.collection("Property")
    const city = req.body.city?String(req.body.city):'.*';
    const type = req.body.filter?String(req.body.filter):'.*';
   const loc = await property.find(
     
-    {location: {$regex:'^'+city, $options:'i'}, type:{$regex:'^'+type, $options:'i'}
+    {location: {$regex:'^'+city, $options:'i'}, type:{$regex:'^'+type, $options:'i'} ,active:true
     
   },
   
@@ -366,12 +277,12 @@ app.route("/search").post(async (req, response) => {
   });
 
 
-  app.route("/getCart").post(async function (req, res) {
+  app.route("/Cart/:id").get(async function (req, res) {
     let db_connect = dbo.getDb("homes4all");
     
     db_connect
       .collection("UserCart")
-      .find({userid:req.body.id})
+      .find({userid:req.params.id})
       .toArray(function (err, result) {
         if (err) throw err;
         res.json(result);
@@ -389,7 +300,7 @@ app.route("/search").post(async (req, response) => {
      const vals=[]
      cartVals.propertyid.forEach(element => {
       vals.push( ObjectId(element));
-      console.log("E "+element)
+     
        
      }); 
      
@@ -441,7 +352,7 @@ res.status(201).json(addcart);
 
 }
 else
-{
+{ 
   res.status(400).json({errror:"Unable to add to cart"})
 
 }
@@ -450,7 +361,7 @@ else
   });
 
 
-  app.route("/removeFromCart").post(async function (req, res) {
+  app.route("/Cart").post(async function (req, res) {
     
     let db_connect = dbo.getDb();
     var Cart = db_connect.collection("UserCart")  

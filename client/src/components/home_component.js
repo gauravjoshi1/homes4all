@@ -34,16 +34,11 @@ const HomeComponent = () => {
 
     const fetchCart = async () => {
       const token = await JSON.parse(sessionStorage.getItem("token"));
-      const res = await fetch("http://localhost:5000/getCart", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify({ id: token._id }),
-      }).then((data) => data.json());
+    
 
-      if (res.length > 0 && res[0].propertyid && res[0].propertyid.length > 0) {
+      let res = await axios.get("http://localhost:5000/Cart/"+token._id);
+       res=res.data;
+      if (res.length > 0 && res[0].propertyid && res[0].propertyid.length > 0) { 
         setCart(res[0].propertyid);
       }
     };
@@ -53,9 +48,9 @@ const HomeComponent = () => {
   }, []);
 
   const indexOfLatestProperty = currentPage * propertiesPerPage;
-  const indexOfFirstProperty = indexOfLatestProperty - propertiesPerPage;
+  const indexOfFirstProperty = indexOfLatestProperty - propertiesPerPage; console.log(cart);
   property.forEach((prop) => {
-    if (cart.includes(prop._id)) prop.disable = true;
+    if (cart.includes(prop._id)) {prop.disable = true; console.log("prop "+prop)}
     else prop.disable = false;
   });
 
@@ -83,32 +78,29 @@ const HomeComponent = () => {
     return res;
   }
 
-  // Store autocomplete object in a ref.
-  // This is done because refs do not trigger a re-render when changed.
+
   const autocompleteRef = useRef(null);
 
   const handleScriptLoad = () => {
-    // Declare Options For Autocomplete
+ 
     const options = {
       types: ["(cities)"],
-    }; // To disable any eslint 'google not defined' errors
+    }; 
 
-    // Initialize Google Autocomplete
+   
     /*global google*/ autocompleteRef.current =
       new google.maps.places.Autocomplete(
         document.getElementById("autocomplete"),
         options
       );
 
-    // Avoid paying for data that you don't need by restricting the set of
-    // place fields that are returned to just the address components and formatted
-    // address.
+  
     autocompleteRef.current.setFields([
       "address_components",
       "formatted_address",
     ]);
 
-    // Fire Event when a suggested name is selected
+   
     autocompleteRef.current.addListener("place_changed", handlePlaceSelect);
   };
 
